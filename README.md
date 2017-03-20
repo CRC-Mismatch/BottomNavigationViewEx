@@ -1,5 +1,3 @@
-## [中文版点我 或 滑动到后面](#zh) ##
-
 ## BottomNavigationViewEx ##
 An android lib for enhancing BottomNavigationView.
 
