@@ -1,4 +1,4 @@
-package com.ittianyu.bottomnavigationviewex;
+package com.msmtx.fontbottomnavigationviewex;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.ittianyu.bottomnavigationviewex.test", appContext.getPackageName());
+        assertEquals("com.msmtx.fontbottomnavigationviewex.test", appContext.getPackageName());
     }
 }

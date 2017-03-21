@@ -1,4 +1,4 @@
-package com.ittianyu.bottomnavigationviewex;
+package com.msmtx.fontbottomnavigationviewex;
 
 import org.junit.Test;
 

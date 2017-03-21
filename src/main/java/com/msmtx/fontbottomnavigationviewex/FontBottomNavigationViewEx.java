@@ -1,6 +1,7 @@
-package com.ittianyu.bottomnavigationviewex;
+package com.msmtx.fontbottomnavigationviewex;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,13 +20,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.innovattic.font.FontTextView;
+import com.innovattic.font.TypefaceManager;
+
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 
 /**
  * Created by yu on 2016/11/10.
  */
-public class BottomNavigationViewEx extends BottomNavigationView {
+public class FontBottomNavigationViewEx extends BottomNavigationView {
     // used for animation
     private int mShiftAmount;
     private float mScaleUpFactor;
@@ -43,18 +48,36 @@ public class BottomNavigationViewEx extends BottomNavigationView {
     private BottomNavigationViewExOnPageChangeListener mPageChangeListener;
     private BottomNavigationMenuView mMenuView;
     private BottomNavigationItemView[] mButtons;
+
+    private FontTextView mSmallLabel;
+    private FontTextView mLargeLabel;
     // used for setupWithViewPager end
 
-    public BottomNavigationViewEx(Context context) {
+    public FontBottomNavigationViewEx(Context context) {
         super(context);
     }
 
-    public BottomNavigationViewEx(Context context, AttributeSet attrs) {
+    public FontBottomNavigationViewEx(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public BottomNavigationViewEx(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FontBottomNavigationViewEx(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        final Resources res = getResources();
+        int inactiveLabelSize =
+                res.getDimensionPixelSize(R.dimen.design_bottom_navigation_text_size);
+        int activeLabelSize = res.getDimensionPixelSize(
+                R.dimen.design_bottom_navigation_active_text_size);
+        //mDefaultMargin = res.getDimensionPixelSize(R.dimen.design_bottom_navigation_margin);
+        mShiftAmount = inactiveLabelSize - activeLabelSize;
+        mScaleUpFactor = 1f * activeLabelSize / inactiveLabelSize;
+        mScaleDownFactor = 1f * inactiveLabelSize / activeLabelSize;
+
+        LayoutInflater.from(context).inflate(R.layout.design_bottom_navigation_item, this, true);
+        setBackgroundResource(R.drawable.design_bottom_navigation_item_background);
+        mSmallLabel = (FontTextView) findViewById(R.id.smallLabel);
+        mLargeLabel = (FontTextView) findViewById(R.id.largeLabel);
     }
 
     /**
@@ -746,7 +769,7 @@ public class BottomNavigationViewEx extends BottomNavigationView {
 
     /**
      * A {@link ViewPager.OnPageChangeListener} class which contains the
-     * necessary calls back to the provided {@link BottomNavigationViewEx} so that the tab position is
+     * necessary calls back to the provided {@link FontBottomNavigationViewEx} so that the tab position is
      * kept in sync.
      * <p>
      * <p>This class stores the provided BottomNavigationViewEx weakly, meaning that you can use
@@ -755,9 +778,9 @@ public class BottomNavigationViewEx extends BottomNavigationView {
      * not cause a leak.
      */
     private static class BottomNavigationViewExOnPageChangeListener implements ViewPager.OnPageChangeListener {
-        private final WeakReference<BottomNavigationViewEx> mBnveRef;
+        private final WeakReference<FontBottomNavigationViewEx> mBnveRef;
 
-        public BottomNavigationViewExOnPageChangeListener(BottomNavigationViewEx bnve) {
+        public BottomNavigationViewExOnPageChangeListener(FontBottomNavigationViewEx bnve) {
             mBnveRef = new WeakReference<>(bnve);
         }
 
@@ -772,7 +795,7 @@ public class BottomNavigationViewEx extends BottomNavigationView {
 
         @Override
         public void onPageSelected(final int position) {
-            final BottomNavigationViewEx bnve = mBnveRef.get();
+            final FontBottomNavigationViewEx bnve = mBnveRef.get();
             if (null != bnve)
                 bnve.setCurrentItem(position);
 //            Log.d("onPageSelected", "--------- position " + position + " ------------");
@@ -790,7 +813,7 @@ public class BottomNavigationViewEx extends BottomNavigationView {
         private int previousPosition = -1;
 
 
-        MyOnNavigationItemSelectedListener(ViewPager viewPager, BottomNavigationViewEx bnve, boolean smoothScroll, OnNavigationItemSelectedListener listener) {
+        MyOnNavigationItemSelectedListener(ViewPager viewPager, FontBottomNavigationViewEx bnve, boolean smoothScroll, OnNavigationItemSelectedListener listener) {
             this.viewPagerRef = new WeakReference<>(viewPager);
             this.listener = listener;
             this.smoothScroll = smoothScroll;
@@ -838,6 +861,12 @@ public class BottomNavigationViewEx extends BottomNavigationView {
             return true;
         }
 
+    }
+
+    public void setTextFont(String textFont) {
+        TypefaceManager manager = TypefaceManager.getInstance();
+        manager.setTypeface(mSmallLabel, textFont);
+        manager.setTypeface(mLargeLabel, textFont);
     }
 
 }
