@@ -1,7 +1,6 @@
 package com.msmtx.fontbottomnavigationviewex;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,16 +11,12 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.innovattic.font.FontTextView;
-import com.innovattic.font.TypefaceManager;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
@@ -48,9 +43,6 @@ public class FontBottomNavigationViewEx extends BottomNavigationView {
     private BottomNavigationViewExOnPageChangeListener mPageChangeListener;
     private BottomNavigationMenuView mMenuView;
     private BottomNavigationItemView[] mButtons;
-
-    private FontTextView mSmallLabel;
-    private FontTextView mLargeLabel;
     // used for setupWithViewPager end
 
     public FontBottomNavigationViewEx(Context context) {
@@ -63,21 +55,6 @@ public class FontBottomNavigationViewEx extends BottomNavigationView {
 
     public FontBottomNavigationViewEx(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        final Resources res = getResources();
-        int inactiveLabelSize =
-                res.getDimensionPixelSize(R.dimen.design_bottom_navigation_text_size);
-        int activeLabelSize = res.getDimensionPixelSize(
-                R.dimen.design_bottom_navigation_active_text_size);
-        //mDefaultMargin = res.getDimensionPixelSize(R.dimen.design_bottom_navigation_margin);
-        mShiftAmount = inactiveLabelSize - activeLabelSize;
-        mScaleUpFactor = 1f * activeLabelSize / inactiveLabelSize;
-        mScaleDownFactor = 1f * inactiveLabelSize / activeLabelSize;
-
-        LayoutInflater.from(context).inflate(R.layout.design_bottom_navigation_item, this, true);
-        setBackgroundResource(R.drawable.design_bottom_navigation_item_background);
-        mSmallLabel = (FontTextView) findViewById(R.id.smallLabel);
-        mLargeLabel = (FontTextView) findViewById(R.id.largeLabel);
     }
 
     /**
@@ -861,12 +838,6 @@ public class FontBottomNavigationViewEx extends BottomNavigationView {
             return true;
         }
 
-    }
-
-    public void setTextFont(String textFont) {
-        TypefaceManager manager = TypefaceManager.getInstance();
-        manager.setTypeface(mSmallLabel, textFont);
-        manager.setTypeface(mLargeLabel, textFont);
     }
 
 }
