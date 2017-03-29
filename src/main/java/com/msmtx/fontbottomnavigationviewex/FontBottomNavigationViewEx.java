@@ -6,25 +6,38 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
+import android.support.design.internal.BottomNavigationPresenter;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.widget.TintTypedArray;
 import android.util.AttributeSet;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.innovattic.font.FontTextView;
+import com.innovattic.font.TypefaceManager;
+
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Created by yu on 2016/11/10.
  */
 public class FontBottomNavigationViewEx extends BottomNavigationView {
+
     // used for animation
     private int mShiftAmount;
     private float mScaleUpFactor;
@@ -35,15 +48,16 @@ public class FontBottomNavigationViewEx extends BottomNavigationView {
     private boolean visibilityTextSizeRecord;
     private boolean visibilityHeightRecord;
     private int mItemHeight;
-    // used for animation end
-
     // used for setupWithViewPager
     private ViewPager mViewPager;
+
     private MyOnNavigationItemSelectedListener mMyOnNavigationItemSelectedListener;
-    private BottomNavigationViewExOnPageChangeListener mPageChangeListener;
+    private FontBottomNavigationViewExOnPageChangeListener mPageChangeListener;
     private BottomNavigationMenuView mMenuView;
     private BottomNavigationItemView[] mButtons;
     // used for setupWithViewPager end
+    // used for animation end
+    private String flFont = "";
 
     public FontBottomNavigationViewEx(Context context) {
         super(context);
@@ -55,6 +69,13 @@ public class FontBottomNavigationViewEx extends BottomNavigationView {
 
     public FontBottomNavigationViewEx(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+    }
+    
+    @Override
+    public void inflateMenu(int resId) {
+        super.inflateMenu(resId);
+        setFlFont(flFont);
     }
 
     /**
@@ -574,6 +595,16 @@ public class FontBottomNavigationViewEx extends BottomNavigationView {
         }
         mMenuView.updateMenuView();
     }
+    
+    public void setFlFont(String font) {
+        flFont = font;
+        for (BottomNavigationItemView button : getBottomNavigationItemViews()) {
+            TextView mSmallLabel = getField(BottomNavigationItemView.class, button, "mSmallLabel");
+            TextView mLargeLabel = getField(BottomNavigationItemView.class, button, "mLargeLabel");
+            TypefaceManager.getInstance().setTypeface(mSmallLabel, font);
+            TypefaceManager.getInstance().setTypeface(mLargeLabel, font);
+        }
+    }
 
     /**
      * set all item large and small TextView size
@@ -677,6 +708,31 @@ public class FontBottomNavigationViewEx extends BottomNavigationView {
         return null;
     }
 
+
+    /**
+     * get private method in this specific object
+     *
+     * @param targetClass
+     * @param instance    the method owner
+     * @param methodName
+     * @param <T>
+     * @return method if success, null otherwise.
+     */
+    private <T> T callMethod(Class<?> targetClass, Object instance, String methodName) {
+        try {
+            Method method = targetClass.getDeclaredMethod(methodName);
+            method.setAccessible(true);
+            return (T) method.invoke(instance);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * change the field value
      *
@@ -734,7 +790,7 @@ public class FontBottomNavigationViewEx extends BottomNavigationView {
 
         // Add our custom OnPageChangeListener to the ViewPager
         if (mPageChangeListener == null) {
-            mPageChangeListener = new BottomNavigationViewExOnPageChangeListener(this);
+            mPageChangeListener = new FontBottomNavigationViewExOnPageChangeListener(this);
         }
         viewPager.addOnPageChangeListener(mPageChangeListener);
 
@@ -754,10 +810,10 @@ public class FontBottomNavigationViewEx extends BottomNavigationView {
      * addOnPageChangeListener(OnPageChangeListener)} without removing the listener and
      * not cause a leak.
      */
-    private static class BottomNavigationViewExOnPageChangeListener implements ViewPager.OnPageChangeListener {
+    private static class FontBottomNavigationViewExOnPageChangeListener implements ViewPager.OnPageChangeListener {
         private final WeakReference<FontBottomNavigationViewEx> mBnveRef;
 
-        public BottomNavigationViewExOnPageChangeListener(FontBottomNavigationViewEx bnve) {
+        public FontBottomNavigationViewExOnPageChangeListener(FontBottomNavigationViewEx bnve) {
             mBnveRef = new WeakReference<>(bnve);
         }
 
