@@ -29,7 +29,7 @@ An android lib for enhancing BottomNavigationView.
 |setSmallTextSize|Set all item small TextView size. Each item has tow label, one is large, another is small. Small one will be shown when item state is normal. Large one will be shown when item checked.
 |setTextSize|Set all item large and small TextView size.
 |setTextVisibility|Change the visibility of text.
-|setupWithViewPager|This method will link the given ViewPager and this BottomNavigationViewEx together so that changes in one are automatically reflected in the other. This includes scroll state changes and clicks.
+|setupWithViewPager|This apiMethod will link the given ViewPager and this BottomNavigationViewEx together so that changes in one are automatically reflected in the other. This includes scroll state changes and clicks.
 
 
 ## Example ##
@@ -173,7 +173,7 @@ If you are using ProGuard you might need to add the following option:
 
 The lib is based on `BottomNavigationView` in `Support Library 25 design`.
 
-I found it was inflexible when I try in demo. For example, I can't change the current checked item by code. So I write a class extends it to provide some useful method.
+I found it was inflexible when I try in demo. For example, I can't change the current checked item by code. So I write a class extends it to provide some useful apiMethod.
 
 You no need to worry about stability. Because I minimise modifying by reflecting.
 
